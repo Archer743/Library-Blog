@@ -8,7 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddDbContext<ApplicationContext>(c => 
-                                          c.UseMySQL("Server=localhost;Database=library_db;Uid=root;Pwd=TheBestBulgaria1969;"));
+                                          c.UseMySQL("Server=localhost;Database=library_db;Uid=root;Pwd=AzisNeEMuj69;"));
 
 builder.Services.AddScoped<BookService, BookService>();
 
