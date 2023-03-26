@@ -1,0 +1,43 @@
+﻿@if (User.Identity?.IsAuthenticated ?? false && User.IsInRole("ADMIN"))
+{
+	<h2>Add New Book</h2>
+
+	<form method="post" asp-controller="Book" asp-action="Create">
+		<span>Title:</span>
+		<p>
+			<input type="text" name="title"/>
+		</p
+
+    <span>Author:</span>
+		<p>
+			<input type="text" name="author" />
+		</p>
+
+		<span>Genre:</span>
+		<p>
+			<input type="text" name="genre" />
+		</p>
+
+		<span>Year of publication:</span>
+		<p>
+			<input type="number" name="yearOfPublication" min="0000" max="2023" style="width: 11.7rem" />
+		</p>
+
+		<span>Pages:</span>
+		<p>
+			<input type="number" name="pages" min=0 />
+		</p>
+
+		<span>Link:</span>
+		<p>
+			<input type="url" name="link" />
+		</p>
+
+		<span>Preview:</span>
+		<p>
+			<textarea name="preview" cols="127" rows="7" style="resize: none;" ></textarea>
+		</p>
+
+		<button type="submit">Add</button>
+	</form>
+}

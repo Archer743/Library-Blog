@@ -1,0 +1,46 @@
+﻿@using Library_Web_App.Data.Entities
+@model Book
+
+@if (User.Identity?.IsAuthenticated ?? false)  //  && User.IsInRole("ADMIN")
+{
+	@if (Model != null)
+	{
+				<h2>@Model.Title</h2>
+
+					<p>
+						<span><b>Author:</b></span>
+						<label>@Model.Author</label>
+					</p>
+
+					<p>
+						<span><b>Genre:</b></span>
+						<label>@Model.Genre</label>
+					</p>
+
+					<p>
+						<span><b>Year of publication:</b></span>
+						<label>@Model.YearOfPublication</label>
+					</p>
+
+					<p>
+						<span><b>Pages:</b></span>
+						<label>@Model.Pages</label>
+					</p>
+
+					<p>
+						<span><b>Link:</b></span>
+						<a href="@Model.Link" target="_blank"> Here</a>
+					</p>
+
+					<span><b>Preview:</b></span>
+					<p>
+						<textarea cols="125" rows="7" disabled style="resize: none;"> @Model.Preview </textarea>
+					</p>
+
+							<button> <a asp-controller="Book" asp-action="Index">Back</a></button>
+	}
+	else
+	{
+				<p>Book Not Found!</p>
+	}
+}
