@@ -5,7 +5,7 @@ namespace Library_Web_App.Service
 {
     public class BookService
     {
-        private ApplicationContext context;
+        private readonly ApplicationContext context;
 
         public BookService(ApplicationContext context)
         {

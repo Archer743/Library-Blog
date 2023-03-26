@@ -16,7 +16,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<ApplicationContext>(c => 
                                           c.UseMySQL(connectionString));
 
-builder.Services.AddDefaultIdentity<User>(options =>
+builder.Services.AddIdentity<User, Role>(options =>
 {
     options.Password.RequiredLength = 8;
     options.Password.RequireNonAlphanumeric = false;
@@ -27,6 +27,7 @@ builder.Services.AddDefaultIdentity<User>(options =>
     .AddEntityFrameworkStores<ApplicationContext>();
 
 builder.Services.AddScoped<BookService, BookService>();
+builder.Services.AddScoped<UserService, UserService>();
 
 builder.Services.AddRazorPages();
 

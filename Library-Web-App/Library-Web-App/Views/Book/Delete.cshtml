@@ -1,47 +1,49 @@
 ﻿@using Library_Web_App.Data.Entities
 @model Book
 
-@if (Model != null)
+@if (User.Identity?.IsAuthenticated ?? false && User.IsInRole("ADMIN"))
 {
-    <h2>@Model.Title</h2>
+	@if (Model != null)
+	{
+			<h2>@Model.Title</h2>
 
-    <form method="post" asp-controller="Book" asp-action="DeleteConfirmed" asp-route-id="@Model.Id">
-        <p>
-            <span><b>Author:</b></span>
-            <label>@Model.Author</label>
-        </p>
+			<form method="post" asp-controller="Book" asp-action="DeleteConfirmed" asp-route-id="@Model.Id">
+				<p>
+					<span><b>Author:</b></span>
+					<label>@Model.Author</label>
+				</p>
 
-        <p>
-            <span><b>Genre:</b></span>
-            <label>@Model.Genre</label>
-        </p>
+				<p>
+					<span><b>Genre:</b></span>
+					<label>@Model.Genre</label>
+				</p>
 
-        <p>
-            <span><b>Year of publication:</b></span>
-            <label>@Model.YearOfPublication</label>
-        </p>
+				<p>
+					<span><b>Year of publication:</b></span>
+					<label>@Model.YearOfPublication</label>
+				</p>
 
-        <p>
-            <span><b>Pages:</b></span>
-            <label>@Model.Pages</label>
-        </p>
+				<p>
+					<span><b>Pages:</b></span>
+					<label>@Model.Pages</label>
+				</p>
 
-        <p>
-            <span><b>Link:</b></span>
-            <a href="@Model.Link" target="_blank"> Here</a>
-        </p>
+				<p>
+					<span><b>Link:</b></span>
+					<a href="@Model.Link" target="_blank"> Here</a>
+				</p>
 
-        <span><b>Preview:</b></span>
-        <p>
-            <textarea cols="125" rows="7" disabled style="resize: none;"> @Model.Preview </textarea>
-        </p>
+				<span><b>Preview:</b></span>
+				<p>
+					<textarea cols="125" rows="7" disabled style="resize: none;"> @Model.Preview </textarea>
+				</p>
 
-        <button asp-controller="Book" asp-action="Index">Deny</button>
-        <button type="submit">Delete</button>
-    </form>
+				<button asp-controller="Book" asp-action="Index">Deny</button>
+				<button type="submit">Delete</button>
+			</form>
+	}
+	else
+	{
+			<p>Book Not Found!</p>
+	}
 }
-else
-{
-    <p>Book Not Found!</p>
-}
-

@@ -5,7 +5,7 @@ using System.Xml;
 
 namespace Library_Web_App.Data
 {
-    public class ApplicationContext : IdentityDbContext<User>
+    public class ApplicationContext : IdentityDbContext<User, Role, string>
     {
         public DbSet<Book> Books { get; set; }
 

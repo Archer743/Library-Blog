@@ -7,7 +7,7 @@ namespace Library_Web_App.Controllers
 {
     public class BookController : Controller
     {
-        private BookService bookService;
+        private readonly BookService bookService;
 
         public BookController(BookService bookService)
         {
