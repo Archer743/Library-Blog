@@ -1,16 +1,34 @@
 using Microsoft.EntityFrameworkCore;
 using Library_Web_App.Data;
 using Library_Web_App.Service;
+using Microsoft.AspNetCore.Identity;
+using Library_Web_App.Data.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
+
+var connectionString =
+    builder.Configuration.GetConnectionString("ApplicationContextConnection") ??
+    throw new InvalidOperationException("Connection string 'ApplicationContextConnection' not found.");
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddDbContext<ApplicationContext>(c => 
-                                          c.UseMySQL("Server=localhost;Database=library_db;Uid=root;Pwd=AzisNeEMuj69;"));
+                                          c.UseMySQL(connectionString));
+
+builder.Services.AddDefaultIdentity<User>(options =>
+{
+    options.Password.RequiredLength = 8;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequiredUniqueChars = 2;
+    options.Password.RequireDigit = true;
+    options.Password.RequireUppercase = true;
+})
+    .AddEntityFrameworkStores<ApplicationContext>();
 
 builder.Services.AddScoped<BookService, BookService>();
+
+builder.Services.AddRazorPages();
 
 var app = builder.Build();
 
@@ -26,11 +44,14 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+app.UseAuthentication();;
 
 app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Book}/{action=Index}/{id?}");
+
+app.MapRazorPages();
 
 app.Run();

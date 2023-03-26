@@ -26,12 +26,6 @@ namespace Library_Web_App.Controllers
             return View(book);
         }
 
-        [HttpPost]
-        public IActionResult Info(Book book)
-        {
-            return RedirectToAction(nameof(Index));
-        }
-
         public IActionResult Create()
             => View();
 
@@ -54,7 +48,7 @@ namespace Library_Web_App.Controllers
             return View(book);
         }
 
-        public IActionResult DeleteConfirmed(Book toBeDeleted)
+        public IActionResult DeleteConfirmed(Book toBeDeleted) // да работи с id
         {
             bookService.Delete(toBeDeleted);
             return RedirectToAction(nameof(Index));

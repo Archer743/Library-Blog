@@ -1,9 +1,13 @@
-﻿<!DOCTYPE html>
+﻿@{
+    ViewData["Title"] = "Library Blog";
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Library_Web_App</title>
+    <title>@ViewData["Title"]</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Library_Web_App.styles.css" asp-append-version="true" />
@@ -25,6 +29,8 @@
                     </ul>
                 </div>
             </div>
+
+            <partial name="_LoginPartial" />
         </nav>
     </header>
     <div class="container">
@@ -35,7 +41,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2023 - Library Blog - <a asp-area="" asp-controller="Book" asp-action="Index">Books</a>
+            &copy; 2023 Library Blog <a asp-area="" asp-controller="Book" asp-action="Index">Books</a>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
