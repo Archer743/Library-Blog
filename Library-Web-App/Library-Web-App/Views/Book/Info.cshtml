@@ -1,46 +1,53 @@
-﻿@using Library_Web_App.Data.Entities
-@model Book
+﻿@using Library_Web_App.Data.ViewModels.Book
+@model InfoViewModel
 
-@if (User.Identity?.IsAuthenticated ?? false)  //  && User.IsInRole("ADMIN")
+@if (User.Identity?.IsAuthenticated ?? false)
 {
 	@if (Model != null)
 	{
-				<h2>@Model.Title</h2>
+		<h2 style="display: inline-block; vertical-align: middle; padding-right: 825px">@Model.Book.Title</h2>
+		<h5 style="display: inline-block; vertical-align: middle;">@Model.Likes likes</h5>
 
-					<p>
-						<span><b>Author:</b></span>
-						<label>@Model.Author</label>
-					</p>
+		<p>
+			<span><b>Author:</b></span>
+			<label>@Model.Book.Author</label>
+		</p>
 
-					<p>
-						<span><b>Genre:</b></span>
-						<label>@Model.Genre</label>
-					</p>
+		<p>
+			<span><b>Genre:</b></span>
+			<label>@Model.Book.Genre</label>
+		</p>
 
-					<p>
-						<span><b>Year of publication:</b></span>
-						<label>@Model.YearOfPublication</label>
-					</p>
+		<p>
+			<span><b>Year of publication:</b></span>
+			<label>@Model.Book.YearOfPublication</label>
+		</p>
 
-					<p>
-						<span><b>Pages:</b></span>
-						<label>@Model.Pages</label>
-					</p>
+		<p>
+			<span><b>Pages:</b></span>
+			<label>@Model.Book.Pages</label>
+		</p>
 
-					<p>
-						<span><b>Link:</b></span>
-						<a href="@Model.Link" target="_blank"> Here</a>
-					</p>
+		<p>
+			<span><b>Link:</b></span>
+			<a href="@Model.Book.Link" target="_blank"> Here</a>
+		</p>
 
-					<span><b>Preview:</b></span>
-					<p>
-						<textarea cols="125" rows="7" disabled style="resize: none;"> @Model.Preview </textarea>
-					</p>
+		<span><b>Preview:</b></span>
+		<p>
+			<textarea cols="125" rows="7" disabled style="resize: none;"> @Model.Book.Preview </textarea>
+		</p>
 
-							<button> <a asp-controller="Book" asp-action="Index">Back</a></button>
+		<button> <a asp-controller="Book" asp-action="Index">Back</a></button>
+
+		if (Model.LikedByCurUser) {
+			<button><a asp-controller="Book" asp-action="Dislike" asp-route-id="@Model.Book.Id">Dislike</a></button>
+		}else {
+			<button><a asp-controller="Book" asp-action="Like" asp-route-id="@Model.Book.Id">Like</a></button>
+		}
 	}
 	else
 	{
-				<p>Book Not Found!</p>
+		<p>Book Not Found!</p>
 	}
 }

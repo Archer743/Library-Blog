@@ -9,6 +9,8 @@ namespace Library_Web_App.Data
     {
         public DbSet<Book> Books { get; set; }
 
+        public DbSet<Like> Likes { get; set; }
+
         public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options) { }
     }
 }

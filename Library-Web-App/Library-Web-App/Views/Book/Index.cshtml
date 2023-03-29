@@ -26,7 +26,7 @@
 						<a asp-controller="Book" asp-action="Edit" asp-route-id="@book.Id">Edit</a>
 					</button>*@
 
-						@if (User.IsInRole("ADMIN")) {
+						@if (User.IsInRole("admin")) {
 							<button>
 								<a asp-controller="Book" asp-action="Delete" asp-route-id="@book.Id">Delete</a>
 							</button>
