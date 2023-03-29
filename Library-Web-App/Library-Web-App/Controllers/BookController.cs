@@ -1,4 +1,5 @@
 ﻿using Library_Web_App.Data.Entities;
+using Library_Web_App.Data.ViewModels.Book;
 using Library_Web_App.Service;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Http.Headers;
@@ -22,8 +23,23 @@ namespace Library_Web_App.Controllers
 
         public IActionResult Info(int id)
         {
-            Book book = bookService.GetById(id);
+            /*if (User.Identity?.IsAuthenticated ?? false)
+                return RedirectToAction(nameof(Index));*/
+
+            InfoViewModel book = bookService.GetByIdWithLikesAndUserLikeBoolean(User.Identity.Name, id);
             return View(book);
+        }
+
+        public IActionResult Like(int id)
+        {
+            bookService.Like(id, User.Identity.Name);
+            return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult Dislike(int id)
+        {
+            bookService.Dislike(id, User.Identity.Name);
+            return RedirectToAction(nameof(Index));
         }
 
         public IActionResult Create()
@@ -48,9 +64,9 @@ namespace Library_Web_App.Controllers
             return View(book);
         }
 
-        public IActionResult DeleteConfirmed(Book toBeDeleted) // да работи с id
+        public IActionResult DeleteConfirmed(int id)
         {
-            bookService.Delete(toBeDeleted);
+            bookService.Delete(id);
             return RedirectToAction(nameof(Index));
         }
     }

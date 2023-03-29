@@ -17,7 +17,6 @@ namespace Library_Web_App.Data.Entities
             Author = author;
             Pages = pages;
             YearOfPublication = yearOfPublication;
-            FavCount = 0;
         }
 
         public int Id { get; set; }
@@ -38,7 +37,5 @@ namespace Library_Web_App.Data.Entities
         public int Pages { get; set; }
 
         public int YearOfPublication { get; set; }
-
-        public int FavCount { get; set; }
     }
 }

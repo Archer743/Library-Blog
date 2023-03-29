@@ -1,4 +1,4 @@
-﻿@if (User.Identity?.IsAuthenticated ?? false && User.IsInRole("ADMIN"))
+﻿@if (User.Identity?.IsAuthenticated ?? false && User.IsInRole("admin"))
 {
 	<h2>Add New Book</h2>
 
