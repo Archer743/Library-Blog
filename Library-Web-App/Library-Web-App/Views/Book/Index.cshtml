@@ -1,5 +1,5 @@
-﻿@using Library_Web_App.Data.Entities
-@model List<Book>
+﻿@using Library_Web_App.Data.ViewModels.Book
+@model List<IndexViewModel>
 
 @if (User.Identity?.IsAuthenticated ?? false)
 {
@@ -9,29 +9,34 @@
 	}
 	else
 	{
-		@foreach (Book book in Model)
-		{
-					<div>
-						<h3>@book.Title</h3>
-						<p><b>- Author:</b> @book.Author</p>
-						<p><b>- Genre:</b> @book.Genre</p>
-						<p><b>- Year of publication:</b> @book.YearOfPublication</p>
-						<p><b>- Pages:</b> @book.Pages</p>
+		<div style="width: 100%; font-size: 0;">
+			@foreach (IndexViewModel book in Model)
+			{
+				<div style="border: 1px solid black; background-color: lightgray; padding: 10px; margin: 10px; border-radius: 10px; display: inline-block; width: 20%; font-size: 16px;">
+					<h3 style="text-align: center;">@book.Title</h3>
+				
+					<p><b>Author:</b> @book.Author</p>
+					<p><b>Genre:</b> @book.Genre</p>
+					<p><b>Year of publication:</b> @book.YearOfPublication</p>
+					<p><b>Pages:</b> @book.Pages</p>
 
+					<div style="text-align: center;">
 						<button>
 							<a asp-controller="Book" asp-action="Info" asp-route-id="@book.Id">View</a>
 						</button>
 
-						@*<button>
-						<a asp-controller="Book" asp-action="Edit" asp-route-id="@book.Id">Edit</a>
-					</button>*@
-
 						@if (User.IsInRole("admin")) {
+							<button>
+								<a asp-controller="Book" asp-action="Edit" asp-route-id="@book.Id">Edit</a>
+							</button>
+
 							<button>
 								<a asp-controller="Book" asp-action="Delete" asp-route-id="@book.Id">Delete</a>
 							</button>
 						}
 					</div>
-		}
+				</div>
+			}
+		</div>
 	}
 }

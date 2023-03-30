@@ -1,6 +1,7 @@
 ﻿using Library_Web_App.Data;
 using Library_Web_App.Data.Entities;
 using Library_Web_App.Data.ViewModels.Book;
+using Library_Web_App.Migrations;
 
 namespace Library_Web_App.Service
 {
@@ -13,8 +14,8 @@ namespace Library_Web_App.Service
             this.context = context;
         }
 
-        public List<Book> GetAll()
-            => context.Books.ToList();
+        public List<IndexViewModel> GetAll()
+            => context.Books.Select(book => new IndexViewModel(book)).ToList();
 
         public List<Book> GetAllByGenre(string genre)
             => context.Books
@@ -35,8 +36,8 @@ namespace Library_Web_App.Service
             => context.Books
                       .FirstOrDefault(book => id == book.Id);
 
-        public InfoViewModel GetByIdWithLikesAndUserLikeBoolean(string userName, int id)
-            => new InfoViewModel(GetById(id), GetLikesCount(id), IsBookLikedByCurUser(id, userName));
+        public InfoViewModel GetByIdExtendedInfo(string userName, int id)
+            => new InfoViewModel(GetById(id), GetLikesCount(id), GetComments(id), IsBookLikedByCurUser(id, userName));
 
         public bool IsBookLikedByCurUser(int id, string userName)
             => GetBookLikeMadeByUser(id, userName) != null;
@@ -53,6 +54,21 @@ namespace Library_Web_App.Service
         public int GetLikesCount(int id)
             => GetBookLikes(id).Count();
 
+        public List<Comment> GetComments(int id)
+            => context.Comments
+                      .Where(comment => comment.BookId == id)
+                      .ToList();
+
+        public Comment GetComment(int id)
+            => context.Comments
+                      .FirstOrDefault(comment => comment.Id == id);
+
+        public void AddComment(int bookId, string userName, string message)
+        {
+            context.Comments.Add(new Comment(bookId, GetUser(userName).Id, message, DateTime.Now));
+            context.SaveChanges();
+        }
+
         public void DeleteAllBookLikes(int id)
         {
             List<Like> likes = GetBookLikes(id);
@@ -63,9 +79,30 @@ namespace Library_Web_App.Service
             context.SaveChanges();
         }
 
-        public User GetLikingUser(string userName)
+        public void DeleteAllBookComments(int id)
+        {
+            List<Comment> comments = GetComments(id);
+
+            foreach (Comment comment in comments)
+                context.Comments.Remove(comment);
+
+            context.SaveChanges();
+        }
+
+        public int DeleteCommentById(int id)
+        {
+            var comment = GetComment(id);
+            int bookId = comment.BookId;
+
+            context.Comments.Remove(comment);
+            context.SaveChanges();
+
+            return bookId;
+        }
+
+        public User GetUser(string userName)
             => context.Users
-                      .FirstOrDefault(user => user.UserName == userName); 
+                      .FirstOrDefault(user => user.UserName == userName);
 
         public void Add(Book book)
         {
@@ -85,13 +122,14 @@ namespace Library_Web_App.Service
 
             context.Books.Remove(book);
             DeleteAllBookLikes(id);
+            DeleteAllBookComments(id);
             
             context.SaveChanges();
         }
 
         public void Like(int bookId, string userName)
         {
-            context.Likes.Add(new Like(bookId, GetLikingUser(userName).Id));
+            context.Likes.Add(new Like(bookId, GetUser(userName).Id));
             context.SaveChanges();
         }
 

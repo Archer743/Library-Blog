@@ -1,0 +1,52 @@
+﻿@using Library_Web_App.Data.Entities
+@model Book
+
+@if (User.Identity?.IsAuthenticated ?? false && User.IsInRole("admin"))
+{
+	@if (Model != null)
+	{
+		<form method="post" asp-controller="Book" asp-action="Edit">
+			<span>Title:</span>
+			<p>
+				<input type="text" name="title" value="@Model.Title" required/>
+			</p
+
+			<span>Author:</span>
+			<p>
+				<input type="text" name="author" value="@Model.Author" required/>
+			</p>
+
+			<span>Genre:</span>
+			<p>
+				<input type="text" name="genre" value="@Model.Genre" required/>
+			</p>
+
+			<span>Year of publication:</span>
+			<p>
+				<input type="number" name="yearOfPublication" min="0000" max="2023" value="@Model.YearOfPublication" required style="width: 11.7rem" />
+			</p>
+
+			<span>Pages:</span>
+			<p>
+				<input type="number" name="pages" min=0 value="@Model.Pages" required/>
+			</p>
+
+			<span>Link:</span>
+			<p>
+				<input type="url" name="link" value="@Model.Link" required/>
+			</p>
+
+			<span>Preview:</span>
+			<p>
+				<textarea name="preview" cols="127" rows="7" required style="resize: none;" >@Model.Preview</textarea>
+			</p>
+
+			<button><a asp-controller="Book" asp-action="Index">Deny</a></button>
+			<button type="submit">Edit</button>
+		</form>
+	}
+	else
+	{
+		<p>Book Not Found!</p>
+	}
+}

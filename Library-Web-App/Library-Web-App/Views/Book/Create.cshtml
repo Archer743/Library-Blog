@@ -1,41 +1,41 @@
-﻿@if (User.Identity?.IsAuthenticated ?? false && User.IsInRole("admin"))
+﻿@if ((User.Identity?.IsAuthenticated ?? false) && User.IsInRole("admin"))
 {
 	<h2>Add New Book</h2>
 
 	<form method="post" asp-controller="Book" asp-action="Create">
 		<span>Title:</span>
 		<p>
-			<input type="text" name="title"/>
+			<input type="text" name="title" required/>
 		</p
 
-    <span>Author:</span>
+		<span>Author:</span>
 		<p>
-			<input type="text" name="author" />
+			<input type="text" name="author" required/>
 		</p>
 
 		<span>Genre:</span>
 		<p>
-			<input type="text" name="genre" />
+			<input type="text" name="genre" required/>
 		</p>
 
 		<span>Year of publication:</span>
 		<p>
-			<input type="number" name="yearOfPublication" min="0000" max="2023" style="width: 11.7rem" />
+			<input type="number" name="yearOfPublication" min="0000" max="2023" required style="width: 11.7rem" />
 		</p>
 
 		<span>Pages:</span>
 		<p>
-			<input type="number" name="pages" min=0 />
+			<input type="number" name="pages" min=0 required/>
 		</p>
 
 		<span>Link:</span>
 		<p>
-			<input type="url" name="link" />
+			<input type="url" name="link" required/>
 		</p>
 
 		<span>Preview:</span>
 		<p>
-			<textarea name="preview" cols="127" rows="7" style="resize: none;" ></textarea>
+			<textarea name="preview" cols="127" rows="7" required style="resize: none;" ></textarea>
 		</p>
 
 		<button type="submit">Add</button>
