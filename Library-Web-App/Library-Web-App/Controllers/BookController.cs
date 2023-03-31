@@ -17,7 +17,7 @@ namespace Library_Web_App.Controllers
 
         public IActionResult Index()
         {
-            List<IndexViewModel> books = bookService.GetAll();
+            List<BookIndexViewModel> books = bookService.GetAll();
             return View(books);
         }
 
@@ -61,7 +61,7 @@ namespace Library_Web_App.Controllers
             /*if (User.Identity?.IsAuthenticated ?? false)
                 return RedirectToAction(nameof(Index));*/
 
-            InfoViewModel book = bookService.GetByIdExtendedInfo(User.Identity.Name, id);
+            BookInfoViewModel book = bookService.GetByIdExtendedInfo(User.Identity.Name, id);
             return View(book);
         }
 

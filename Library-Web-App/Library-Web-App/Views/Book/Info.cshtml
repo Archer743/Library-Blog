@@ -1,6 +1,6 @@
 ﻿@using Library_Web_App.Data.Entities
 @using Library_Web_App.Data.ViewModels.Book
-@model InfoViewModel
+@model BookInfoViewModel
 
 @if (User.Identity?.IsAuthenticated ?? false)
 {
@@ -59,15 +59,20 @@
 			}else {
 				foreach(var comment in Model.Comments) {
 					<div style="border: 1px solid black; background-color: lightgray; padding: 10px; margin: 10px; border-radius: 10px;">
-						@*<h6>@comment.User.UserName</h6>*@
-						<label>@comment.Posted</label>
-						<p>@comment.Message</p>
+						<div style="display: flex; justify-content: space-between; align-items: center;">
+							<h6 style="margin: 0; color: @comment.UserRoleColor">@comment.Data.User.UserName</h6>
+							<label style="margin: 0;">@comment.Data.Posted</label>
+						</div>
+						
+						<hr />
+						<p>@comment.Data.Message</p>
 
-						@*@if (User.Identity.Name == comment.User.UserName || User.IsInRole("admin")) {*@
+						@if (User.Identity.Name == comment.Data.User.UserName || User.IsInRole("admin"))
+						{
 							<div style="text-align: right;">
-								<button><a asp-controller="Book" asp-action="DeleteComment" asp-route-id="@comment.Id">Delete</a></button>
+								<button><a asp-controller="Book" asp-action="DeleteComment" asp-route-id="@comment.Data.Id">Delete</a></button>
 							</div>
-						@*}*@
+						}
 					</div>
 				}
 			}

@@ -1,7 +1,10 @@
 ﻿using Library_Web_App.Data;
 using Library_Web_App.Data.Entities;
 using Library_Web_App.Data.ViewModels.Book;
+using Library_Web_App.Data.ViewModels.Comment;
 using Library_Web_App.Migrations;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace Library_Web_App.Service
 {
@@ -14,8 +17,8 @@ namespace Library_Web_App.Service
             this.context = context;
         }
 
-        public List<IndexViewModel> GetAll()
-            => context.Books.Select(book => new IndexViewModel(book)).ToList();
+        public List<BookIndexViewModel> GetAll()
+            => context.Books.Select(book => new BookIndexViewModel(book)).ToList();
 
         public List<Book> GetAllByGenre(string genre)
             => context.Books
@@ -36,18 +39,20 @@ namespace Library_Web_App.Service
             => context.Books
                       .FirstOrDefault(book => id == book.Id);
 
-        public InfoViewModel GetByIdExtendedInfo(string userName, int id)
-            => new InfoViewModel(GetById(id), GetLikesCount(id), GetComments(id), IsBookLikedByCurUser(id, userName));
+        public BookInfoViewModel GetByIdExtendedInfo(string userName, int id)
+            => new BookInfoViewModel(GetById(id), GetLikesCount(id), GetCommentsExtendedInfo(id), IsBookLikedByCurUser(id, userName));
 
         public bool IsBookLikedByCurUser(int id, string userName)
             => GetBookLikeMadeByUser(id, userName) != null;
 
         public Like GetBookLikeMadeByUser(int bookId, string userName)
             => context.Likes
+                      .Include(c => c.User)
                       .FirstOrDefault(like => like.BookId == bookId && like.User.UserName == userName);
 
         public List<Like> GetBookLikes(int id)
             => context.Likes
+                      .Include(c => c.User)
                       .Where(like => like.BookId == id)
                       .ToList();
 
@@ -56,11 +61,28 @@ namespace Library_Web_App.Service
 
         public List<Comment> GetComments(int id)
             => context.Comments
+                      .Include(c => c.User)
                       .Where(comment => comment.BookId == id)
                       .ToList();
 
+        public List<CommentInfoViewModel> GetCommentsExtendedInfo(int id)
+            => GetComments(id).Select(comment => new CommentInfoViewModel(comment, GetUserRoleColor(comment.UserId))).ToList();
+
+        public string GetUserRoleColor(string userId)
+        {
+            string roleId = context.UserRoles
+                                   .FirstOrDefault(user_role => user_role.UserId == userId)
+                                   .RoleId;
+
+            Role role = context.Roles
+                              .FirstOrDefault(role => role.Id == roleId);
+
+            return role.Color;
+        }
+
         public Comment GetComment(int id)
             => context.Comments
+                      .Include(c => c.User)
                       .FirstOrDefault(comment => comment.Id == id);
 
         public void AddComment(int bookId, string userName, string message)

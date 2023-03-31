@@ -2,9 +2,9 @@
 
 namespace Library_Web_App.Data.ViewModels.Book
 {
-	public class IndexViewModel
+	public class BookIndexViewModel
 	{
-		public IndexViewModel(BookClass book)
+		public BookIndexViewModel(BookClass book)
 		{
 			Id = book.Id;
 			Title = book.Title;

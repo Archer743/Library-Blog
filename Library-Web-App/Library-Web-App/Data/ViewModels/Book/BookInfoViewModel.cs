@@ -1,11 +1,12 @@
 ﻿using Library_Web_App.Data.Entities;
+using Library_Web_App.Data.ViewModels.Comment;
 using BookClass = Library_Web_App.Data.Entities.Book;
 
 namespace Library_Web_App.Data.ViewModels.Book
 {
-    public class InfoViewModel
+    public class BookInfoViewModel
     {
-        public InfoViewModel(BookClass book, int likes, List<Comment> comments, bool likedByCurUser)
+        public BookInfoViewModel(BookClass book, int likes, List<CommentInfoViewModel> comments, bool likedByCurUser)
         {
             Book = book;
             Likes = likes;
@@ -19,6 +20,6 @@ namespace Library_Web_App.Data.ViewModels.Book
 
         public bool LikedByCurUser { get; private set; }
 
-        public List<Comment> Comments { get; private set; }
+        public List<CommentInfoViewModel> Comments { get; private set; }
     }
 }
