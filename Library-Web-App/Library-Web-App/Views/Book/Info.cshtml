@@ -6,8 +6,12 @@
 {
 	@if (Model != null)
 	{
-		<h2 style="display: inline-block; vertical-align: middle; padding-right: 825px">@Model.Book.Title</h2>
-		<h5 style="display: inline-block; vertical-align: middle;">@Model.Likes likes</h5>
+		<div style="display: flex; justify-content: space-between; align-items: center;">
+			<h2 style="margin: 0;">@Model.Book.Title</h2>
+			<h5 style="margin: 0;">@Model.Likes likes</h5>
+		</div>
+
+		<label></label>
 
 		<p>
 			<span><b>Author:</b></span>

@@ -1,5 +1,5 @@
-﻿@using Library_Web_App.Data.Entities
-@model List<User>
+﻿@using Library_Web_App.Data.ViewModels.User
+@model List<UserIndexViewModel>
 
 @if (User.Identity?.IsAuthenticated ?? false && User.IsInRole("admin"))
 {
@@ -9,13 +9,34 @@
 	}
 	else
 	{
+		<style>
+			table, th, td {
+				border: 1px solid black;
+				border-collapse: collapse;
+				padding: 13px;
+				text-align: center;
+			}
+		</style>
+
 		<h3>Users</h3>
 
-		@foreach (User user in Model)
+		<label></label>
+
+		<table>
+			<tr>
+				<th style="background-color:lightgrey">ID</th>
+				<th style="background-color:lightgrey">User</th>
+				<th style="background-color:lightgrey">Role</th>
+			</tr>
+
+		@foreach (UserIndexViewModel user in Model)
 		{
-			<div>
-				<h6>- @user.UserName</h6>
-			</div>
+			<tr>
+				<th>@user.Id</th>
+				<th>@user.UserName</th>
+				<th style="color:@user.Role.Color">@user.Role.NormalizedName</th>
+			</tr>
 		}
+		</table>
 	}
 }
