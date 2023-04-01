@@ -1,80 +1,89 @@
 ﻿@using Library_Web_App.Data.Entities
 @using Library_Web_App.Data.ViewModels.Book
-@model InfoViewModel
+@model BookInfoViewModel
 
-@if (User.Identity?.IsAuthenticated ?? false)
+
+@if (Model != null)
 {
-	@if (Model != null)
-	{
-		<h2 style="display: inline-block; vertical-align: middle; padding-right: 825px">@Model.Book.Title</h2>
-		<h5 style="display: inline-block; vertical-align: middle;">@Model.Likes likes</h5>
+	<div style="display: flex; justify-content: space-between; align-items: center;">
+		<h2 style="margin: 0;">@Model.Book.Title</h2>
+		<h5 style="margin: 0;">@Model.Likes likes</h5>
+	</div>
 
-		<p>
-			<span><b>Author:</b></span>
-			<label>@Model.Book.Author</label>
-		</p>
+	<label></label>
 
-		<p>
-			<span><b>Genre:</b></span>
-			<label>@Model.Book.Genre</label>
-		</p>
+	<p>
+		<span><b>Author:</b></span>
+		<label>@Model.Book.Author</label>
+	</p>
 
-		<p>
-			<span><b>Year of publication:</b></span>
-			<label>@Model.Book.YearOfPublication</label>
-		</p>
+	<p>
+		<span><b>Genre:</b></span>
+		<label>@Model.Book.Genre</label>
+	</p>
 
-		<p>
-			<span><b>Pages:</b></span>
-			<label>@Model.Book.Pages</label>
-		</p>
+	<p>
+		<span><b>Year of publication:</b></span>
+		<label>@Model.Book.YearOfPublication</label>
+	</p>
 
-		<p>
-			<span><b>Link:</b></span>
-			<a href="@Model.Book.Link" target="_blank"> Here</a>
-		</p>
+	<p>
+		<span><b>Pages:</b></span>
+		<label>@Model.Book.Pages</label>
+	</p>
 
-		<span><b>Preview:</b></span>
-		<p>
-			<textarea cols="125" rows="7" disabled style="resize: none;"> @Model.Book.Preview </textarea>
-		</p>
+	<p>
+		<span><b>Link:</b></span>
+		<a href="@Model.Book.Link" target="_blank"> Here</a>
+	</p>
 
-		<button><a asp-controller="Book" asp-action="Index">Back</a></button>
+	<span><b>Preview:</b></span>
+	<p>
+		<textarea cols="125" rows="7" disabled style="resize: none;"> @Model.Book.Preview </textarea>
+	</p>
 
-		if (Model.LikedByCurUser) {
-			<button><a asp-controller="Book" asp-action="Dislike" asp-route-id="@Model.Book.Id">Dislike</a></button>
-		}else {
-			<button><a asp-controller="Book" asp-action="Like" asp-route-id="@Model.Book.Id">Like</a></button>
-		}
+	<button><a asp-controller="Book" asp-action="Index">Back</a></button>
 
-		<button><a asp-controller="Book" asp-action="Comment" asp-route-id="@Model.Book.Id">Add Comment</a></button>
+	if (Model.LikedByCurUser) {
+		<button><a asp-controller="Book" asp-action="Dislike" asp-route-id="@Model.Book.Id">Dislike</a></button>
+	}else {
+		<button><a asp-controller="Book" asp-action="Like" asp-route-id="@Model.Book.Id">Like</a></button>
+	}
+
+	<button><a asp-controller="Book" asp-action="Comment" asp-route-id="@Model.Book.Id">Add Comment</a></button>
 		
-		<div>
-			<label></label>
-			<hr />
-			<h5>Comments (@Model.Comments.Count())</h5>
+	<div>
+		<label></label>
+		<hr />
+		<h5>Comments (@Model.Comments.Count())</h5>
 
-			@if (Model.Comments.Count() == 0) {
-				<p>No comments for now!</p>
-			}else {
-				foreach(var comment in Model.Comments) {
-					<div style="border: 1px solid black; background-color: lightgray; padding: 10px; margin: 10px; border-radius: 10px;">
-						@*<h6>@comment.User.UserName</h6>*@
-						<label>@comment.Posted</label>
-						<p>@comment.Message</p>
-
-						@*@if (User.Identity.Name == comment.User.UserName || User.IsInRole("admin")) {*@
-							<div style="text-align: right;">
-								<button><a asp-controller="Book" asp-action="DeleteComment" asp-route-id="@comment.Id">Delete</a></button>
-							</div>
-						@*}*@
+		@if (Model.Comments.Count() == 0) {
+			<p>No comments for now!</p>
+		}else {
+			foreach(var comment in Model.Comments) {
+				<div style="border: 1px solid black; background-color: lightgray; padding: 10px; margin: 10px; border-radius: 10px;">
+					<div style="display: flex; justify-content: space-between; align-items: center;">
+						<h6 style="margin: 0; color: @comment.UserRoleColor">@comment.Data.User.UserName</h6>
+						<label style="margin: 0;">@comment.Data.Posted</label>
 					</div>
-				}
+						
+					<hr />
+					<p>@comment.Data.Message</p>
+
+					@if (User.Identity.Name == comment.Data.User.UserName || User.IsInRole("admin"))
+					{
+						<div style="text-align: right;">
+							<button><a asp-controller="Book" asp-action="DeleteComment" asp-route-id="@comment.Data.Id">Delete</a></button>
+						</div>
+					}
+				</div>
 			}
-		</div>
-	}
-	else
-	{
-		<p>Book Not Found!</p>
-	}
+		}
+	</div>
+}
+else
+{
+	<div style="margin: auto; text-align: center; font-weight: bold;">
+		<p style="padding: 5px;">Book Not Found!</p>
+	</div>
 }

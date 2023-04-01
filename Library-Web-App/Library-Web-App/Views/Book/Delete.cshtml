@@ -1,11 +1,10 @@
 ﻿@using Library_Web_App.Data.Entities
 @model Book
 
-@if (User.Identity?.IsAuthenticated ?? false && User.IsInRole("admin"))
-{
+@if (User.IsInRole("admin")) {
 	@if (Model != null)
 	{
-		<h2>@Model.Title</h2>
+		<h3>@Model.Title</h3>
 
 		<p>
 			<span><b>Author:</b></span>
@@ -39,9 +38,15 @@
 
 		<button><a asp-controller="Book" asp-action="Index">Deny</a></button>
 		<button><a asp-controller="Book" asp-action="DeleteConfirmed" asp-route-id="@Model.Id">Delete</a></button>
-	}
-	else
+	}else
 	{
-			<p>Book Not Found!</p>
+		<div style="margin: auto; text-align: center; font-weight: bold;">
+			<p style="padding: 5px;">Book Not Found!</p>
+		</div>
 	}
+}else {
+	<div style="margin: auto; text-align: center; font-weight: bold;">
+		<img style="border-radius: 10px;" src="https://media.tenor.com/BlKbcuoS9RMAAAAC/bitch-wheres-my-money.gif" alt="Description of image">
+		<p style="padding: 5px;">You should have given me money to make you an Admin!</p>
+	</div>
 }

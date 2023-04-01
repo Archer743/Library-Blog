@@ -3,6 +3,7 @@ using Library_Web_App.Data;
 using Library_Web_App.Service;
 using Microsoft.AspNetCore.Identity;
 using Library_Web_App.Data.Entities;
+using Library_Web_App.Service.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,8 +27,10 @@ builder.Services.AddIdentity<User, Role>(options =>
 })
     .AddEntityFrameworkStores<ApplicationContext>();
 
-builder.Services.AddScoped<BookService, BookService>();
-builder.Services.AddScoped<UserService, UserService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ILikeService, LikeService>();
+builder.Services.AddScoped<ICommentService, CommentService>();
+builder.Services.AddScoped<IBookService, BookService>();
 
 builder.Services.AddRazorPages();
 

@@ -1,96 +1,168 @@
 ﻿using Library_Web_App.Data.Entities;
 using Library_Web_App.Data.ViewModels.Book;
-using Library_Web_App.Service;
+using Library_Web_App.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using System.Net.Http.Headers;
 
 namespace Library_Web_App.Controllers
 {
     public class BookController : Controller
     {
-        private readonly BookService bookService;
+        private readonly IBookService bookService;
 
-        public BookController(BookService bookService)
+        public BookController(IBookService bookService)
         {
             this.bookService = bookService;
         }
 
         public IActionResult Index()
         {
-            List<IndexViewModel> books = bookService.GetAll();
-            return View(books);
+            if (User.Identity?.IsAuthenticated ?? false)
+            {
+                List<BookIndexViewModel> books = bookService.GetAll();
+                return View(books);
+            }
+
+            return RedirectToAction(nameof(NotAuthenticated));
         }
 
         public IActionResult Create()
-            => View();
+        {
+            if (User.Identity?.IsAuthenticated ?? false)
+            {
+                return View();
+            }
+
+            return RedirectToAction(nameof(NotAuthenticated));
+        }
 
         [HttpPost]
         public IActionResult Create(Book book)
         {
-            bookService.Add(book);
-            return RedirectToAction(nameof(Index));
+            if (User.Identity?.IsAuthenticated ?? false)
+            {
+                bookService.Add(book);
+                return RedirectToAction(nameof(Index));
+            }
+
+            return RedirectToAction(nameof(NotAuthenticated));
         }
 
         public IActionResult Edit(int id)
         {
-            Book book = bookService.GetById(id);
-            return View(book);
+            if (User.Identity?.IsAuthenticated ?? false)
+            {
+                Book book = bookService.GetById(id);
+                return View(book);
+            }
+
+            return RedirectToAction(nameof(NotAuthenticated));
         }
 
         [HttpPost]
         public IActionResult Edit(Book book)
         {
-            bookService.Edit(book);
-            return RedirectToAction(nameof(Index));
+            if (User.Identity?.IsAuthenticated ?? false)
+            {
+                bookService.Edit(book);
+                return RedirectToAction(nameof(Index));
+            }
+
+            return RedirectToAction(nameof(NotAuthenticated));
         }
 
         public IActionResult Delete(int id)
         {
-            Book book = bookService.GetById(id);
-            return View(book);
+            if (User.Identity?.IsAuthenticated ?? false)
+            {
+                Book book = bookService.GetById(id);
+                return View(book);
+            }
+
+            return RedirectToAction(nameof(NotAuthenticated));
         }
 
         public IActionResult DeleteConfirmed(int id)
         {
-            bookService.Delete(id);
-            return RedirectToAction(nameof(Index));
+            if (User.Identity?.IsAuthenticated ?? false)
+            {
+                bookService.Delete(id);
+                return RedirectToAction(nameof(Index));
+            }
+
+            return RedirectToAction(nameof(NotAuthenticated));
         }
 
         public IActionResult Info(int id)
         {
-            /*if (User.Identity?.IsAuthenticated ?? false)
-                return RedirectToAction(nameof(Index));*/
+            if (User.Identity?.IsAuthenticated ?? false)
+            {
+                BookInfoViewModel book = bookService.GetByIdExtendedInfo(User.Identity.Name, id);
+                return View(book);
+            }
 
-            InfoViewModel book = bookService.GetByIdExtendedInfo(User.Identity.Name, id);
-            return View(book);
+            return RedirectToAction(nameof(NotAuthenticated));
         }
 
         public IActionResult Like(int id)
         {
-            bookService.Like(id, User.Identity.Name);
-            return RedirectToAction(nameof(Info), new { id = id });
+            if (User.Identity?.IsAuthenticated ?? false)
+            {
+                bookService.Like(id, User.Identity.Name);
+                return RedirectToAction(nameof(Info), new { id = id });
+            }
+
+            return RedirectToAction(nameof(NotAuthenticated));
         }
 
         public IActionResult Dislike(int id)
         {
-            bookService.Dislike(id, User.Identity.Name);
-            return RedirectToAction(nameof(Info), new { id = id });
+            if (User.Identity?.IsAuthenticated ?? false)
+            {
+                bookService.Dislike(id, User.Identity.Name);
+                return RedirectToAction(nameof(Info), new { id = id });
+            }
+
+            return RedirectToAction(nameof(NotAuthenticated));
         }
 
         public IActionResult Comment(int id)
-            => View(id);
+        {
+            if (User.Identity?.IsAuthenticated ?? false)
+            {
+                return View(id);
+            }
+
+            return RedirectToAction(nameof(NotAuthenticated));
+        }
 
         [HttpPost]
         public IActionResult Comment(int id, string message)
         {
-            bookService.AddComment(id, User.Identity.Name, message);
-            return RedirectToAction(nameof(Info), new { id = id });
+            if (User.Identity?.IsAuthenticated ?? false)
+            {
+                bookService.AddComment(id, User.Identity.Name, message);
+                return RedirectToAction(nameof(Info), new { id = id });
+            }
+
+            return RedirectToAction(nameof(NotAuthenticated));
         }
 
         public IActionResult DeleteComment(int id)
         {
-            int bookId = bookService.DeleteCommentById(id);
-            return RedirectToAction(nameof(Info), new { id = bookId });
+            if (User.Identity?.IsAuthenticated ?? false)
+            {
+                int bookId = bookService.DeleteCommentById(id);
+
+                if (bookId != -1)
+                    return RedirectToAction(nameof(Info), new { id = bookId });
+
+                return RedirectToAction(nameof(Index));
+            }
+
+            return RedirectToAction(nameof(NotAuthenticated));
         }
+
+        public IActionResult NotAuthenticated()
+            => View();
     }
 }

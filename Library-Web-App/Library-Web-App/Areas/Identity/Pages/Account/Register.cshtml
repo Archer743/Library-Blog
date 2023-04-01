@@ -59,7 +59,16 @@
                 <label></label>
             </div>
 
-            <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
+            <div>
+                <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
+                <label></label>
+            </div>
+
+            <div>
+                <p>
+                    <a asp-page="./Login" asp-route-returnUrl="@Model.ReturnUrl">Login</a>
+                </p>
+            </div>
         </form>
     </div>
 </div>
