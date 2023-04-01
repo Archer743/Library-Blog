@@ -1,14 +1,12 @@
 ﻿using Library_Web_App.Data;
 using Library_Web_App.Data.Entities;
+using Library_Web_App.Data.ViewModels.Book;
 using Library_Web_App.Data.ViewModels.User;
-using Library_Web_App.Migrations;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using System.Security.Cryptography.X509Certificates;
+using Library_Web_App.Service.Interfaces;
 
 namespace Library_Web_App.Service
 {
-    public class UserService
+    public class UserService : IUserService
     {
         private readonly ApplicationContext context;
 
@@ -17,32 +15,44 @@ namespace Library_Web_App.Service
             this.context = context;
         }
 
-        public List<UserIndexViewModel> GetAll()
-            => GetAllUsers().Select(user => new UserIndexViewModel(user.Id, user.UserName, GetUserRole(user.Id)))
+        public List<User> GetAll()
+            => context.Users
+                      .ToList();
+
+        public List<UserIndexViewModel> GetAllExtended()
+            => GetAll().Select(user => new UserIndexViewModel(user.Id, user.UserName, GetRole(user.Id)))
                             .ToList();
 
-        public List<User> GetAllUsers()
+        public User GetByName(string userName)
             => context.Users
-                      .ToList();
+                      .FirstOrDefault(user => user.UserName == userName);
 
-        public User GetById(string id)
-            => context.Users
-                      .FirstOrDefault(user => user.Id == id);
-
-        public List<Book> GetLikedBookes(string id)
+        public List<BookIndexViewModel> GetLikedBookes(string userName)
             => context.Likes
-                      .Where(like => like.UserId == id)
-                      .Select(like => like.Book)
+                      .Where(like => like.User.UserName == userName)
+                      .Select(like => new BookIndexViewModel(like.Book))
                       .ToList();
 
-        public Role GetUserRole(string userId)
-        {
-            string roleId = context.UserRoles
-                                   .FirstOrDefault(user_role => user_role.UserId == userId)
-                                   .RoleId;
+        public string GetRoleId(string userId)
+            => context.UserRoles
+                      .FirstOrDefault(user_role => user_role.UserId == userId)
+                      ?.RoleId ?? null;
 
-            return context.Roles
-                          .FirstOrDefault(role => role.Id == roleId);
+        public Role GetRole(string userId)
+        {
+            string roleId = GetRoleId(userId);
+
+            if (roleId == null)
+                return null;
+
+            return GetRoleById(roleId);
         }
+
+        public Role GetRoleById(string roleId)
+            => context.Roles
+                      .FirstOrDefault(role => role.Id == roleId);
+
+        public string GetUserRoleColor(string userId)
+            => GetRole(userId)?.Color ?? "black";
     }
 }

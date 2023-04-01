@@ -1,5 +1,4 @@
-﻿using Library_Web_App.Data.Entities;
-using Library_Web_App.Data.ViewModels.Comment;
+﻿using Library_Web_App.Data.ViewModels.Comment;
 using BookClass = Library_Web_App.Data.Entities.Book;
 
 namespace Library_Web_App.Data.ViewModels.Book

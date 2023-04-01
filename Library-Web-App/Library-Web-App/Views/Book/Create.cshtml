@@ -1,12 +1,12 @@
-﻿@if ((User.Identity?.IsAuthenticated ?? false) && User.IsInRole("admin"))
+﻿@if (User.IsInRole("admin"))
 {
-	<h2>Add New Book</h2>
+	<h3>Add New Book</h3>
 
 	<form method="post" asp-controller="Book" asp-action="Create">
 		<span>Title:</span>
 		<p>
 			<input type="text" name="title" required/>
-		</p
+		</p>
 
 		<span>Author:</span>
 		<p>
@@ -40,4 +40,9 @@
 
 		<button type="submit">Add</button>
 	</form>
+}else {
+	<div style="margin: auto; text-align: center; font-weight: bold;">
+		<img style="border-radius: 10px;" src="https://media.tenor.com/BlKbcuoS9RMAAAAC/bitch-wheres-my-money.gif" alt="Description of image">
+		<p style="padding: 5px;">You should have given me money to make you an Admin!</p>
+	</div>
 }

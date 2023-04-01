@@ -1,13 +1,14 @@
 ﻿@using Library_Web_App.Data.ViewModels.User
 @model List<UserIndexViewModel>
 
-@if (User.Identity?.IsAuthenticated ?? false && User.IsInRole("admin"))
+@if (User.IsInRole("admin"))
 {
-	@if (Model.Count == 0)
+	if (Model.Count == 0)
 	{
-		<p>No Users Found!</p>
-	}
-	else
+			<div style="margin: auto; text-align: center; font-weight: bold;">
+				<p style="padding: 5px;">Likes Not Found!</p>
+			</div>
+	}else
 	{
 		<style>
 			table, th, td {
@@ -19,24 +20,30 @@
 		</style>
 
 		<h3>Users</h3>
-
 		<label></label>
 
 		<table>
 			<tr>
-				<th style="background-color:lightgrey">ID</th>
-				<th style="background-color:lightgrey">User</th>
-				<th style="background-color:lightgrey">Role</th>
+				<th style="background-color:antiquewhite">ID</th>
+				<th style="background-color:antiquewhite">User</th>
+				<th style="background-color:antiquewhite">Role</th>
 			</tr>
 
 		@foreach (UserIndexViewModel user in Model)
 		{
-			<tr>
-				<th>@user.Id</th>
-				<th>@user.UserName</th>
-				<th style="color:@user.Role.Color">@user.Role.NormalizedName</th>
-			</tr>
+				<tr>
+					<th>@user.Id</th>
+					<th>@user.UserName</th>
+					<th style="color:@user.Role.Color">@user.Role.NormalizedName</th>
+				</tr>
 		}
 		</table>
 	}
+}
+else
+{
+		<div style="margin: auto; text-align: center; font-weight: bold;">
+			<img style="border-radius: 10px;" src="https://media.tenor.com/BlKbcuoS9RMAAAAC/bitch-wheres-my-money.gif" alt="Description of image">
+			<p style="padding: 5px;">You should have given me money to make you an Admin!</p>
+		</div>
 }
