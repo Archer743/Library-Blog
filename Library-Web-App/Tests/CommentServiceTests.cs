@@ -6,6 +6,7 @@ using Library_Web_App.Service;
 using Library_Web_App.Service.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Moq;
+using System.Net;
 
 namespace Tests
 {
@@ -37,71 +38,70 @@ namespace Tests
         {
             const int id = 1;
 
-            Book book = new Book(id, "title", "preview", "link",
-                                 "genre", "author", 10, 2000);
+            AddTestBook(id);
 
-            context.Books.Add(book);
-            context.SaveChanges();
-
-            Assert.AreEqual(true, commentService.BookExists(id));
+            Assert.AreEqual(commentService.BookExists(id), true);
         }
 
         [Test]
         public void BookExistsShouldReturnFalse()
         {
-            const int id = -9;
+            const int id = -1;
 
-            Assert.AreEqual(false, commentService.BookExists(id));
+            Assert.AreEqual(commentService.BookExists(id), false);
         }
 
         [Test]
         public void AddCommentShouldNotAddCommentIfBookDoesNotExist()
         {
-            commentService.AddComment(1, "", "");
+            const int bookId = -1;
+            const string userId = "abc";
+            const string userName = "";
 
-            Assert.True(context.Comments.ToList().Count() == 0);
+            User user = AddTestUser(userId, userName);
+
+            userServiceMock.Setup(x => x.GetByName(userName))
+                           .Returns(user);
+
+            commentService.AddComment(bookId, userName, "");
+
+            Assert.AreEqual(context.Comments.ToList().Count() == 0, true);
         }
 
         [Test]
         public void AddCommentShouldNotAddCommentIfUserDoesNotExist()
         {
-            string userName = "";
+            const string userName = "";
 
             userServiceMock.Setup(x => x.GetByName(userName))
                            .Returns((User)null);
 
             const int id = 1;
 
-            Book book = new Book(id, "title", "preview", "link",
-                                 "genre", "author", 10, 2000);
-
-            context.Books.Add(book);
-            context.SaveChanges();
+            AddTestBook(id);
 
             commentService.AddComment(id, userName, "");
 
-            Assert.True(context.Comments.ToList().Count() == 0);
+            Assert.AreEqual(context.Comments.ToList().Count() == 0, true);
         }
 
         [Test]
         public void AddCommentShouldAddNewComment()
         {
+            string userId = "1";
             string userName = "2";
 
+            User user = AddTestUser(userId, userName);
+
             userServiceMock.Setup(x => x.GetByName(userName))
-                           .Returns(new User());
+                           .Returns(user);
 
-            const int id = 1;
+            const int bookId = 1;
+            AddTestBook(bookId);
 
-            Book book = new Book(id, "title", "preview", "link",
-                                 "genre", "author", 10, 2000);
+            commentService.AddComment(bookId, userName, "");
 
-            context.Books.Add(book);
-            context.SaveChanges();
-
-            commentService.AddComment(id, userName, "");
-
-            Assert.True(context.Comments.ToList().Count() == 1);
+            Assert.AreEqual(context.Comments.ToList().Count() == 1, true);
         }
 
         [Test]
@@ -110,51 +110,26 @@ namespace Tests
             string userId = "1";
             string userName = "2";
 
-            User user = new User()
-            {
-                Id = userId,
-                UserName = userName,
-                Gender = "idk",
-                BirthDate = DateTime.Now,
-                NormalizedUserName = "NAME",
-                Email = "dedede",
-                NormalizedEmail = "EMAIL",
-                EmailConfirmed = false,
-                PasswordHash = "pishmiqjkata",
-                SecurityStamp = "duner",
-                ConcurrencyStamp = "pizza",
-                PhoneNumber = "ddz",
-                PhoneNumberConfirmed = true,
-                TwoFactorEnabled = false,
-                LockoutEnd = null,
-                LockoutEnabled = false,
-                AccessFailedCount = 69
-            };
+            User user = AddTestUser(userId, userName);
 
             userServiceMock.Setup(x => x.GetByName(userName))
                            .Returns(user);
 
-            const int id = 1;
+            const int bookId = 1;
+            AddTestBook(bookId);
 
-            Book book = new Book(id, "title", "preview", "link",
-                                 "genre", "author", 10, 2000);
-
-            context.Books.Add(book);
-            context.SaveChanges();
-
-            context.Users.Add(user);
-            context.SaveChanges();
-
-            commentService.AddComment(id, userName, "");
+            commentService.AddComment(bookId, userName, "");
 
             List<Comment> comments = context.Comments.ToList();
 
-            Assert.True(comments.Count() == 1);
-            
+            Assert.AreEqual(comments.Count() == 1, true);
+
             var comment = comments[0];
             int commentId = comment.Id;
-            
-            Assert.True(commentService.GetComment(commentId) != null);
+
+            Comment c1 = commentService.GetComment(commentId);
+
+            Assert.AreEqual(c1 != null, true);
         }
 
         [Test]
@@ -163,51 +138,24 @@ namespace Tests
             string userId = "1";
             string userName = "2";
 
-            User user = new User()
-            {
-                Id = userId,
-                UserName = userName,
-                Gender = "idk",
-                BirthDate = DateTime.Now,
-                NormalizedUserName = "NAME",
-                Email = "dedede",
-                NormalizedEmail = "EMAIL",
-                EmailConfirmed = false,
-                PasswordHash = "pishmiqjkata",
-                SecurityStamp = "duner",
-                ConcurrencyStamp = "pizza",
-                PhoneNumber = "ddz",
-                PhoneNumberConfirmed = true,
-                TwoFactorEnabled = false,
-                LockoutEnd = null,
-                LockoutEnabled = false,
-                AccessFailedCount = 69
-            };
+            User user = AddTestUser(userId, userName);
 
             userServiceMock.Setup(x => x.GetByName(userName))
                            .Returns(user);
 
-            const int id = 1;
+            const int bookId = 1;
+            AddTestBook(bookId);
 
-            Book book = new Book(id, "title", "preview", "link",
-                                 "genre", "author", 10, 2000);
+            commentService.AddComment(bookId, userName, "");
+            commentService.AddComment(bookId, userName, "");
+            commentService.AddComment(bookId, userName, "");
 
-            context.Books.Add(book);
-            context.SaveChanges();
+            List<Comment> comments = commentService.GetComments(bookId);
 
-            context.Users.Add(user);
-            context.SaveChanges();
+            Assert.AreEqual(comments.Count() == 3, true);
 
-            commentService.AddComment(id, userName, "");
-            commentService.AddComment(id, userName, "");
-            commentService.AddComment(id, userName, "");
-
-            List<Comment> comments = commentService.GetComments(id);
-
-            Assert.True(comments.Count() == 3);
-
-            foreach(var comment in comments)
-                Assert.AreEqual(comment.BookId, id);
+            foreach (var comment in comments)
+                Assert.AreEqual(comment.BookId, bookId);
         }
 
         [Test]
@@ -216,48 +164,22 @@ namespace Tests
             string userId = "1";
             string userName = "2";
 
-            User user = new User()
-            {
-                Id = userId,
-                UserName = userName,
-                Gender = "idk",
-                BirthDate = DateTime.Now,
-                NormalizedUserName = "NAME",
-                Email = "dedede",
-                NormalizedEmail = "EMAIL",
-                EmailConfirmed = false,
-                PasswordHash = "pishmiqjkata",
-                SecurityStamp = "duner",
-                ConcurrencyStamp = "pizza",
-                PhoneNumber = "ddz",
-                PhoneNumberConfirmed = true,
-                TwoFactorEnabled = false,
-                LockoutEnd = null,
-                LockoutEnabled = false,
-                AccessFailedCount = 69
-            };
+            User user = AddTestUser(userId, userName);
 
             userServiceMock.Setup(x => x.GetByName(userName))
                            .Returns(user);
 
-            context.Users.Add(user);
-            context.SaveChanges();
+            const int bookId = 1;
 
-            const int id = 1;
+            AddTestBook(bookId);
 
-            Book book = new Book(id, "title", "preview", "link",
-                                 "genre", "author", 10, 2000);
-
-            context.Books.Add(book);
-            context.SaveChanges();
-
-            commentService.AddComment(id, userName, "");
-            commentService.AddComment(id, userName, "");
-            commentService.AddComment(id, userName, "");
+            commentService.AddComment(bookId, userName, "");
+            commentService.AddComment(bookId, userName, "");
+            commentService.AddComment(bookId, userName, "");
 
             Assert.True(context.Comments.ToList().Count() == 3);
 
-            commentService.DeleteAllBookComments(id);
+            commentService.DeleteAllBookComments(bookId);
 
             Assert.True(context.Comments.ToList().Count() == 0);
         }
@@ -265,7 +187,34 @@ namespace Tests
         [Test]
         public void DeleteCommentByIdShouldReturnNegativeIfCommentNotFound()
         {
-            Assert.True(commentService.DeleteCommentById(69) == -1);
+            const int id = -1;
+            const string userName = "1";
+            const bool isAdmin = false;
+            Assert.True(commentService.DeleteCommentById(id, userName, isAdmin) == -1);
+        }
+
+        [Test]
+        public void DeleteCommentByIdShouldReturnNegativeIfUserNotAdminNorAuthor()
+        {
+            string userId = "1";
+            string userName = "2";
+            string testUserName = "Ivan";
+            bool isAdmin = false;
+
+            User user = AddTestUser(userId, userName);
+
+            userServiceMock.Setup(x => x.GetByName(userName))
+                           .Returns(user);
+
+            const int bookId = 1;
+            AddTestBook(bookId);
+
+            commentService.AddComment(bookId, userName, "");
+
+            List<Comment> comments = commentService.GetComments(bookId);
+            int commentId = comments[0].Id;
+
+            Assert.True(commentService.DeleteCommentById(commentId, testUserName, isAdmin) == -1);
         }
 
         [Test]
@@ -273,48 +222,23 @@ namespace Tests
         {
             string userId = "1";
             string userName = "2";
+            bool isAdmin = true;
 
-            User user = new User()
-            {
-                Id = userId,
-                UserName = userName,
-                Gender = "idk",
-                BirthDate = DateTime.Now,
-                NormalizedUserName = "NAME",
-                Email = "dedede",
-                NormalizedEmail = "EMAIL",
-                EmailConfirmed = false,
-                PasswordHash = "pishmiqjkata",
-                SecurityStamp = "duner",
-                ConcurrencyStamp = "pizza",
-                PhoneNumber = "ddz",
-                PhoneNumberConfirmed = true,
-                TwoFactorEnabled = false,
-                LockoutEnd = null,
-                LockoutEnabled = false,
-                AccessFailedCount = 69
-            };
+            User user = AddTestUser(userId, userName);
 
             userServiceMock.Setup(x => x.GetByName(userName))
                            .Returns(user);
 
-            const int id = 1;
+            const int bookId = 1;
 
-            Book book = new Book(id, "title", "preview", "link",
-                                 "genre", "author", 10, 2000);
+            AddTestBook(bookId);
 
-            context.Books.Add(book);
-            context.SaveChanges();
-
-            context.Users.Add(user);
-            context.SaveChanges();
-
-            commentService.AddComment(id, userName, "");
+            commentService.AddComment(bookId, userName, "");
 
             List<Comment> comments = context.Comments.ToList();
 
             Assert.True(comments.Count() == 1);
-            Assert.True(commentService.DeleteCommentById(comments[0].Id) == id);
+            Assert.True(commentService.DeleteCommentById(comments[0].Id, userName, isAdmin) == bookId);
             Assert.True(context.Comments.ToList().Count() == 0);
         }
 
@@ -324,6 +248,45 @@ namespace Tests
             string userId = "1";
             string userName = "2";
 
+            User user = AddTestUser(userId, userName);
+
+            userServiceMock.Setup(x => x.GetByName(userName))
+                           .Returns(user);
+
+            userServiceMock.Setup(x => x.GetUserRoleColor(userId))
+                           .Returns("black");
+
+            const int bookId = 1;
+
+            AddTestBook(bookId);
+
+            commentService.AddComment(bookId, userName, "");
+            commentService.AddComment(bookId, userName, "");
+            commentService.AddComment(bookId, userName, "");
+
+            Assert.True(context.Comments.ToList().Count() == 3);
+
+            List<CommentExtendedViewModel> commentsExtra = commentService.GetCommentsExtendedInfo(bookId);
+
+            Assert.True(commentsExtra.Count() == 3);
+
+            foreach (var comment in commentsExtra)
+                Assert.AreEqual(comment.Data.BookId, bookId);
+        }
+
+        public Book AddTestBook(int id)
+        {
+            Book book = new Book(id, "title", "preview", "link",
+                                 "genre", "author", 10, 2000);
+
+            context.Books.Add(book);
+            context.SaveChanges();
+
+            return book;
+        }
+
+        public User AddTestUser(string userId, string userName)
+        {
             User user = new User()
             {
                 Id = userId,
@@ -345,35 +308,10 @@ namespace Tests
                 AccessFailedCount = 69
             };
 
-            userServiceMock.Setup(x => x.GetByName(userName))
-                           .Returns(user);
-
-            userServiceMock.Setup(x => x.GetUserRoleColor(userId))
-                           .Returns("black");
-
             context.Users.Add(user);
             context.SaveChanges();
 
-            const int id = 1;
-
-            Book book = new Book(id, "title", "preview", "link",
-                                 "genre", "author", 10, 2000);
-
-            context.Books.Add(book);
-            context.SaveChanges();
-
-            commentService.AddComment(id, userName, "");
-            commentService.AddComment(id, userName, "");
-            commentService.AddComment(id, userName, "");
-
-            Assert.True(context.Comments.ToList().Count() == 3);
-
-            List<CommentInfoViewModel> commentsExtra = commentService.GetCommentsExtendedInfo(id);
-
-            Assert.True(commentsExtra.Count() == 3);
-
-            foreach (var comment in commentsExtra)
-                Assert.AreEqual(comment.Data.BookId, id);
+            return user;
         }
     }
 }

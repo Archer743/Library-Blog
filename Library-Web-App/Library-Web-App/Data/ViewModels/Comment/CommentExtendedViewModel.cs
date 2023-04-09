@@ -2,9 +2,9 @@
 
 namespace Library_Web_App.Data.ViewModels.Comment
 {
-	public class CommentInfoViewModel
+	public class CommentExtendedViewModel
 	{
-		public CommentInfoViewModel(CommentClass data, string userRoleColor)
+		public CommentExtendedViewModel(CommentClass data, string userRoleColor)
 		{
 			Data = data;
 			UserRoleColor = userRoleColor;

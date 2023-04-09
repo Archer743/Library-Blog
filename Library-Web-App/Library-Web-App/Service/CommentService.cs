@@ -25,8 +25,12 @@ namespace Library_Web_App.Service
                       .OrderBy(comment => comment.Posted)
                       .ToList();
 
-        public List<CommentInfoViewModel> GetCommentsExtendedInfo(int id)
-            => GetComments(id).Select(comment => new CommentInfoViewModel(comment, userService.GetUserRoleColor(comment.UserId))).ToList();
+        public List<CommentExtendedViewModel> GetCommentsExtendedInfo(int id)
+            => GetComments(id).Select(comment => new CommentExtendedViewModel(comment, userService.GetUserRoleColor(comment.UserId)))
+                              .ToList();
+
+        public BookCommentsViewModel GetBookCommentsViewModel(int bookId)
+            => new BookCommentsViewModel(bookId, GetCommentsExtendedInfo(bookId));
 
         public Comment GetComment(int id)
            => context.Comments
@@ -57,11 +61,11 @@ namespace Library_Web_App.Service
             context.SaveChanges();
         }
 
-        public int DeleteCommentById(int id)
+        public int DeleteCommentById(int id, string userName, bool isAdmin)
         {
             var comment = GetComment(id);
 
-            if (comment == null)
+            if (comment == null || (!isAdmin && comment.User.UserName != userName))
                 return -1;
 
             int bookId = comment.BookId;

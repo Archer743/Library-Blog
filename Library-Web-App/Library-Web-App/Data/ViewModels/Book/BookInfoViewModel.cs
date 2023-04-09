@@ -5,11 +5,10 @@ namespace Library_Web_App.Data.ViewModels.Book
 {
     public class BookInfoViewModel
     {
-        public BookInfoViewModel(BookClass book, int likes, List<CommentInfoViewModel> comments, bool likedByCurUser)
+        public BookInfoViewModel(BookClass book, int likes, bool likedByCurUser)
         {
             Book = book;
             Likes = likes;
-            Comments = comments;
             LikedByCurUser = likedByCurUser;
         }
 
@@ -18,7 +17,5 @@ namespace Library_Web_App.Data.ViewModels.Book
         public int Likes { get; private set;  }
 
         public bool LikedByCurUser { get; private set; }
-
-        public List<CommentInfoViewModel> Comments { get; private set; }
     }
 }

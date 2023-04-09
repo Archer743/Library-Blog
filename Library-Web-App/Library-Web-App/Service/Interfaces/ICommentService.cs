@@ -9,7 +9,9 @@ namespace Library_Web_App.Service.Interfaces
 	{
             List<Comment> GetComments(int id);
 
-            List<CommentInfoViewModel> GetCommentsExtendedInfo(int id);
+            List<CommentExtendedViewModel> GetCommentsExtendedInfo(int id);
+
+            BookCommentsViewModel GetBookCommentsViewModel(int bookId);
 
             Comment GetComment(int id);
 
@@ -17,7 +19,7 @@ namespace Library_Web_App.Service.Interfaces
 
             void DeleteAllBookComments(int id);
 
-            int DeleteCommentById(int id);
+            int DeleteCommentById(int id, string userName, bool isAdmin);
 
             bool BookExists(int bookId);
     }

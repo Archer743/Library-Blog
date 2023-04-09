@@ -2,7 +2,6 @@
 @using Library_Web_App.Data.ViewModels.Book
 @model BookInfoViewModel
 
-
 @if (Model != null)
 {
 	<div style="display: flex; justify-content: space-between; align-items: center;">
@@ -45,41 +44,13 @@
 	<button><a asp-controller="Book" asp-action="Index">Back</a></button>
 
 	if (Model.LikedByCurUser) {
-		<button><a asp-controller="Book" asp-action="Dislike" asp-route-id="@Model.Book.Id">Dislike</a></button>
+		<button><a asp-controller="Like" asp-action="Dislike" asp-route-id="@Model.Book.Id">Dislike</a></button>
 	}else {
-		<button><a asp-controller="Book" asp-action="Like" asp-route-id="@Model.Book.Id">Like</a></button>
+		<button><a asp-controller="Like" asp-action="Like" asp-route-id="@Model.Book.Id">Like</a></button>
 	}
 
-	<button><a asp-controller="Book" asp-action="Comment" asp-route-id="@Model.Book.Id">Add Comment</a></button>
-		
-	<div>
-		<label></label>
-		<hr />
-		<h5>Comments (@Model.Comments.Count())</h5>
-
-		@if (Model.Comments.Count() == 0) {
-			<p>No comments for now!</p>
-		}else {
-			foreach(var comment in Model.Comments) {
-				<div style="border: 1px solid black; background-color: lightgray; padding: 10px; margin: 10px; border-radius: 10px;">
-					<div style="display: flex; justify-content: space-between; align-items: center;">
-						<h6 style="margin: 0; color: @comment.UserRoleColor">@comment.Data.User.UserName</h6>
-						<label style="margin: 0;">@comment.Data.Posted</label>
-					</div>
-						
-					<hr />
-					<p>@comment.Data.Message</p>
-
-					@if (User.Identity.Name == comment.Data.User.UserName || User.IsInRole("admin"))
-					{
-						<div style="text-align: right;">
-							<button><a asp-controller="Book" asp-action="DeleteComment" asp-route-id="@comment.Data.Id">Delete</a></button>
-						</div>
-					}
-				</div>
-			}
-		}
-	</div>
+	<button><a asp-controller="Comment" asp-action="AddComment" asp-route-id="@Model.Book.Id">Add Comment</a></button>
+	<button><a asp-controller="Comment" asp-action="BookComments" asp-route-id="@Model.Book.Id">View Comments</a></button>	
 }
 else
 {

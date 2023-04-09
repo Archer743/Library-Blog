@@ -1,11 +1,7 @@
 ﻿using Library_Web_App.Data;
 using Library_Web_App.Data.Entities;
 using Library_Web_App.Data.ViewModels.Book;
-using Library_Web_App.Data.ViewModels.Comment;
-using Library_Web_App.Migrations;
 using Library_Web_App.Service.Interfaces;
-using Microsoft.EntityFrameworkCore;
-using System.Linq;
 
 namespace Library_Web_App.Service
 {
@@ -38,10 +34,9 @@ namespace Library_Web_App.Service
                 return null;
 
             int likeCount = likeService.GetLikesCount(id);
-            List<CommentInfoViewModel> comments = commentService.GetCommentsExtendedInfo(id);
             bool isLiked = likeService.IsBookLikedByCurUser(id, userName);
             
-            return new BookInfoViewModel(book, likeCount, comments, isLiked);
+            return new BookInfoViewModel(book, likeCount, isLiked);
         }
         public void Add(Book book)
         {
@@ -69,17 +64,5 @@ namespace Library_Web_App.Service
             
             context.SaveChanges();
         }
-
-        public void Like(int bookId, string userName)
-            => likeService.Like(bookId, userName);
-
-        public void Dislike(int bookId, string userName)
-            => likeService.Dislike(bookId, userName);
-
-        public void AddComment(int bookId, string userName, string message)
-            => commentService.AddComment(bookId, userName, message);
-
-        public int DeleteCommentById(int id)
-            => commentService.DeleteCommentById(id);
     }
 }

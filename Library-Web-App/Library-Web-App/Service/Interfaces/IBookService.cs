@@ -16,13 +16,5 @@ namespace Library_Web_App.Service.Interfaces
         void Edit(Book book);
 
         void Delete(int id);
-
-        void Like(int bookId, string userName);
-
-        void Dislike(int bookId, string userName);
-
-        void AddComment(int bookId, string userName, string message);
-
-        int DeleteCommentById(int id);
     }
 }

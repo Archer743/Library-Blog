@@ -1,0 +1,12 @@
+﻿@model int
+
+<h3>New Comment</h3>
+
+<form method="post" asp-controller="Comment" asp-action="Comment" asp-route-id="@Model">
+	<span>Message:</span>
+	<p>
+		<textarea id="commentTextarea" name="message" cols="127" rows="5" maxlength="115" required style="resize: none;" ></textarea>
+	</p>
+
+	<button type="submit">Comment</button>
+</form >

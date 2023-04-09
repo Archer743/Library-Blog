@@ -28,7 +28,7 @@ namespace Library_Web_App.Data.Entities
 
         public Book Book { get; set; }
 
-        [StringLength(500)]
+        [StringLength(115)]
         public string Message { get; set; }
 
         public DateTime Posted { get; set; }

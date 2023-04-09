@@ -15,13 +15,16 @@ namespace Library_Web_App.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<User> _signInManager;
         private readonly UserManager<User> _userManager;
+        private readonly RoleManager<Role> _roleManager;
 
         public RegisterModel(
             UserManager<User> userManager,
-            SignInManager<User> signInManager)
+            SignInManager<User> signInManager,
+            RoleManager<Role> roleManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _roleManager = roleManager;
         }
 
         [BindProperty]
@@ -84,6 +87,9 @@ namespace Library_Web_App.Areas.Identity.Pages.Account
 
                 if (result.Succeeded)
                 {
+                    if (!await _roleManager.RoleExistsAsync("USER"))
+                        await _roleManager.CreateAsync(new Role("user", "black"));
+
                     await _userManager.AddToRoleAsync(user, "USER");
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     return LocalRedirect(returnUrl);

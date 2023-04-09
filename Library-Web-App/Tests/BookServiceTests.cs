@@ -4,9 +4,7 @@ using Library_Web_App.Service;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using Library_Web_App.Data.Entities;
-using static System.Reflection.Metadata.BlobBuilder;
 using Library_Web_App.Data.ViewModels.Book;
-using Library_Web_App.Data.ViewModels.Comment;
 
 namespace Tests
 {
@@ -38,25 +36,22 @@ namespace Tests
         public void GeByIdShouldReturnBook()
         {
             const int id = 1;
-
-            Book book = new Book(id, "title", "preview", "link",
-                                 "genre", "author", 10, 2000);
-
-            context.Books.Add(book);
-            context.SaveChanges();
+            Book book = AddTestBook(id);
 
             Book resultBook = bookService.GetById(id);
 
-            Assert.True(resultBook != null);
-            Assert.True(resultBook?.Id == id);
+            Assert.AreEqual(resultBook != null, true);
+            Assert.AreEqual(AreBooksEqual(book, resultBook), true);
         }
 
         [Test]
-        public void GeByIdShouldReturnNullIfBookNotFound()
+        public void GetByIdShouldReturnNullIfBookNotFound()
         {
-            const int id = -69;
+            const int id = -1;
 
-            Assert.True(bookService.GetById(id) == null);
+            Book resultBook = bookService.GetById(id);
+
+            Assert.AreEqual(resultBook == null, true);
         }
 
         [Test]
@@ -69,7 +64,7 @@ namespace Tests
 
             bookService.Add(book);
 
-            Assert.True(context.Books.ToList().Count() != 0);
+            Assert.AreEqual(context.Books.ToList().Count() == 1, true);
         }
 
         [Test]
@@ -77,10 +72,7 @@ namespace Tests
         {
             const int id = 1;
 
-            Book book = new Book(id, "title", "preview", "link",
-                                 "genre", "author", 10, 2000);
-
-            bookService.Add(book);
+            Book book = AddTestBook(id);
 
             List<Book> books = context.Books.ToList();
             Assert.True(books.Count() == 1);
@@ -97,16 +89,16 @@ namespace Tests
         [Test]
         public void DeleteShouldNotRemoveBookIfItNotFound()
         {
-            const int id = 1;
+            const int id = -1;
 
-            Book book = new Book(id, "title", "preview", "link",
+            Book book = new Book(10, "title", "preview", "link",
                                  "genre", "author", 10, 2000);
 
             bookService.Add(book);
 
             Assert.True(context.Books.ToList().Count() == 1);
 
-            bookService.Delete(-id);
+            bookService.Delete(id);
 
             Assert.True(context.Books.ToList().Count() == 1);
         }
@@ -116,10 +108,7 @@ namespace Tests
         {
             const int id = 1;
 
-            Book book = new Book(id, "title", "preview", "link",
-                                 "genre", "author", 10, 2000);
-
-            bookService.Add(book);
+            AddTestBook(id);
 
             Assert.True(context.Books.ToList().Count() == 1);
 
@@ -135,97 +124,72 @@ namespace Tests
             const int id1 = 2;
             const int id2 = 3;
 
-            Book book = new Book(id, "title", "preview", "link",
-                                 "genre", "author", 10, 2000);
+            AddTestBook(id);
+            AddTestBook(id1);
+            AddTestBook(id2);
 
-            Book book1 = new Book(id1, "title", "preview", "link",
-                                 "genre", "author", 10, 2000);
-
-            Book book2 = new Book(id2, "title", "preview", "link",
-                                 "genre", "author", 10, 2000);
-
-            bookService.Add(book);
-            bookService.Add(book1);
-            bookService.Add(book2);
-
-            Assert.True(context.Books.ToList().Count() == 3);
+            Assert.AreEqual(context.Books.ToList().Count() == 3, true);
 
             List<BookIndexViewModel> booksIndexView = bookService.GetAll();
-            Assert.True(booksIndexView.Count() == 3);
+            Assert.AreEqual(booksIndexView.Count() == 3, true);
         }
 
         [Test]
         public void GetByIdExtendedInfoShouldReturnNullIfBookNotFound()
         {
-            const int id = -69;
+            const int id = -1;
             string curUserName = "";
 
-            Assert.True(bookService.GetByIdExtendedInfo(curUserName, id) == null);
+            Assert.AreEqual(bookService.GetByIdExtendedInfo(curUserName, id) == null, true);
         }
 
         [Test]
         public void GetByIdExtendedInfoShouldReturnBookFullInfo()
         {
-            string userName = "Duner";
+            const string userName = "Duner";
 
             const int id = 1;
-            const int id1 = 2;
-            const int id2 = 3;
+            const int likesCount = 5;
+            const bool likedByCurUser = true;
 
-            Book book = new Book(id, "title", "preview", "link",
-                                 "genre", "author", 10, 2000);
+            Book book = AddTestBook(id);
 
-            Book book1 = new Book(id1, "title", "preview", "link",
-                                 "genre", "author", 10, 2000);
-
-            Book book2 = new Book(id2, "title", "preview", "link",
-                                 "genre", "author", 10, 2000);
-
-            bookService.Add(book);
-            bookService.Add(book1);
-            bookService.Add(book2);
-
-            Assert.True(context.Books.ToList().Count() == 3);
-
+            Assert.True(context.Books.ToList().Count() == 1);
 
 
             likeServiceMock.Setup(x => x.GetLikesCount(id))
-                            .Returns(5);
-
-            commentServiceMock.Setup(x => x.GetCommentsExtendedInfo(id))
-                           .Returns(new List<CommentInfoViewModel>());
+                            .Returns(likesCount);
 
             likeServiceMock.Setup(x => x.IsBookLikedByCurUser(id, userName))
-                           .Returns(true);
+                           .Returns(likedByCurUser);
 
-            Assert.True(bookService.GetByIdExtendedInfo(userName, id).Book.Id == id);
+            BookInfoViewModel bookInfo = bookService.GetByIdExtendedInfo(userName, id);
+            Book resultBook = bookInfo.Book;
 
-
-
-            likeServiceMock.Setup(x => x.GetLikesCount(id1))
-                            .Returns(6);
-
-            commentServiceMock.Setup(x => x.GetCommentsExtendedInfo(id1))
-                           .Returns(new List<CommentInfoViewModel>());
-
-            likeServiceMock.Setup(x => x.IsBookLikedByCurUser(id1, userName))
-                           .Returns(false);
-
-            Assert.True(bookService.GetByIdExtendedInfo(userName, id1).Book.Id == id1);
-
-
-
-            likeServiceMock.Setup(x => x.GetLikesCount(id2))
-                            .Returns(7);
-
-            commentServiceMock.Setup(x => x.GetCommentsExtendedInfo(id2))
-                           .Returns(new List<CommentInfoViewModel>());
-
-            likeServiceMock.Setup(x => x.IsBookLikedByCurUser(id2, userName))
-                           .Returns(true);
-
-            Assert.True(bookService.GetByIdExtendedInfo(userName, id2).Book.Id == id2);
-
+            Assert.AreEqual(AreBooksEqual(resultBook, book), true);
+            Assert.AreEqual(bookInfo.Likes == likesCount, true);
+            Assert.AreEqual(bookInfo.LikedByCurUser == likedByCurUser, true);
         }
+
+        public Book AddTestBook(int id)
+        {
+            Book book = new Book(id, "title", "preview", "link",
+                                 "genre", "author", 10, 2000);
+
+            context.Books.Add(book);
+            context.SaveChanges();
+
+            return book;
+        }
+
+        public bool AreBooksEqual(Book one, Book two)
+            =>  one?.Id == two?.Id &&
+                one?.Title == two?.Title &&
+                one?.Preview == two?.Preview &&
+                one?.Link == two?.Link &&
+                one?.Genre == two?.Genre &&
+                one?.Author == two?.Author &&
+                one?.Pages == two?.Pages &&
+                one?.YearOfPublication == two?.YearOfPublication;
     }
 }

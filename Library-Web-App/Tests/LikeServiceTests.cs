@@ -35,11 +35,7 @@ namespace Tests
         {
             const int id = 1;
             
-            Book book = new Book(id, "title", "preview", "link",
-                                 "genre", "author", 10, 2000);
-
-            context.Books.Add(book);
-            context.SaveChanges();
+            AddTestBook(id);
 
             Assert.AreEqual(true, likeService.BookExists(id));
         }
@@ -47,9 +43,9 @@ namespace Tests
         [Test]
         public void BookExistsShouldReturnFalse()
         {
-            const int id = -69;
+            const int id = -1;
 
-            Assert.AreEqual(false, likeService.BookExists(id));
+            Assert.AreEqual(likeService.BookExists(id), false);
         }
 
         [Test]
@@ -70,11 +66,7 @@ namespace Tests
 
             const int id = 1;
 
-            Book book = new Book(id, "title", "preview", "link",
-                                 "genre", "author", 10, 2000);
-
-            context.Books.Add(book);
-            context.SaveChanges();
+            AddTestBook(id);
                 
             likeService.Like(id, userName);
 
@@ -91,11 +83,7 @@ namespace Tests
 
             const int id = 1;
 
-            Book book = new Book(id, "title", "preview", "link",
-                                 "genre", "author", 10, 2000);
-
-            context.Books.Add(book);
-            context.SaveChanges();
+            AddTestBook(id);
 
             likeService.Like(id, userName);
 
@@ -112,11 +100,7 @@ namespace Tests
 
             const int id = 1;
 
-            Book book = new Book(id, "title", "preview", "link",
-                                 "genre", "author", 10, 2000);
-
-            context.Books.Add(book);
-            context.SaveChanges();
+            AddTestBook(id);
 
             likeService.Like(id, userName);
             likeService.Dislike(-9, userName);
@@ -130,40 +114,14 @@ namespace Tests
             string userId = "1";
             string userName = "2";
 
-            User user = new User()
-            {
-                Id = userId,
-                UserName = userName,
-                Gender = "idk",
-                BirthDate = DateTime.Now,
-                NormalizedUserName = "NAME",
-                Email = "dedede",
-                NormalizedEmail = "EMAIL",
-                EmailConfirmed = false,
-                PasswordHash = "pishmiqjkata",
-                SecurityStamp = "duner",
-                ConcurrencyStamp = "pizza",
-                PhoneNumber = "ddz",
-                PhoneNumberConfirmed = true,
-                TwoFactorEnabled = false,
-                LockoutEnd = null,
-                LockoutEnabled = false,
-                AccessFailedCount = 69
-            };
+            User user = AddTestUser(userId, userName);
 
             userServiceMock.Setup(x => x.GetByName(userName))
                            .Returns(user);
 
             const int id = 1;
 
-            Book book = new Book(id, "title", "preview", "link",
-                                 "genre", "author", 10, 2000);
-
-            context.Books.Add(book);
-            context.SaveChanges();
-
-            context.Users.Add(user);
-            context.SaveChanges();
+            AddTestBook(id);
 
             likeService.Like(id, userName);
 
@@ -178,40 +136,14 @@ namespace Tests
             string userId = "1";
             string userName = "2";
 
-            User user = new User()
-            {
-                Id = userId,
-                UserName = userName,
-                Gender = "idk",
-                BirthDate = DateTime.Now,
-                NormalizedUserName = "NAME",
-                Email = "dedede",
-                NormalizedEmail = "EMAIL",
-                EmailConfirmed = false,
-                PasswordHash = "pishmiqjkata",
-                SecurityStamp = "duner",
-                ConcurrencyStamp = "pizza",
-                PhoneNumber = "ddz",
-                PhoneNumberConfirmed = true,
-                TwoFactorEnabled = false,
-                LockoutEnd = null,
-                LockoutEnabled = false,
-                AccessFailedCount = 69
-            };
+            User user = AddTestUser(userId, userName);
 
             userServiceMock.Setup(x => x.GetByName(userName))
                            .Returns(user);
 
             const int id = 1;
 
-            Book book = new Book(id, "title", "preview", "link",
-                                 "genre", "author", 10, 2000);
-
-            context.Books.Add(book);
-            context.SaveChanges();
-
-            context.Users.Add(user);
-            context.SaveChanges();
+            AddTestBook(id);
 
             likeService.Like(id, userName);
 
@@ -228,11 +160,7 @@ namespace Tests
 
             const int id = 1;
 
-            Book book = new Book(id, "title", "preview", "link",
-                                 "genre", "author", 10, 2000);
-
-            context.Books.Add(book);
-            context.SaveChanges();
+            AddTestBook(id);
 
             likeService.Like(id, userName);
 
@@ -246,40 +174,14 @@ namespace Tests
             string userId = "1";
             string userName = "2";
 
-            User user = new User()
-            {
-                Id = userId,
-                UserName = userName,
-                Gender = "idk",
-                BirthDate = DateTime.Now,
-                NormalizedUserName = "NAME",
-                Email = "dedede",
-                NormalizedEmail = "EMAIL",
-                EmailConfirmed = false,
-                PasswordHash = "pishmiqjkata",
-                SecurityStamp = "duner",
-                ConcurrencyStamp = "pizza",
-                PhoneNumber = "ddz",
-                PhoneNumberConfirmed = true,
-                TwoFactorEnabled = false,
-                LockoutEnd = null,
-                LockoutEnabled = false,
-                AccessFailedCount = 69
-            };
+            User user = AddTestUser(userId, userName);
 
             userServiceMock.Setup(x => x.GetByName(userName))
                            .Returns(user);
 
             const int id = 1;
 
-            Book book = new Book(id, "title", "preview", "link",
-                                 "genre", "author", 10, 2000);
-
-            context.Books.Add(book);
-            context.SaveChanges();
-
-            context.Users.Add(user);
-            context.SaveChanges();
+            AddTestBook(id);
 
             likeService.Like(id, userName);
 
@@ -292,40 +194,14 @@ namespace Tests
             string userId = "1";
             string userName = "2";
 
-            User user = new User()
-            {
-                Id = userId,
-                UserName = userName,
-                Gender = "idk",
-                BirthDate = DateTime.Now,
-                NormalizedUserName = "NAME",
-                Email = "dedede",
-                NormalizedEmail = "EMAIL",
-                EmailConfirmed = false,
-                PasswordHash = "pishmiqjkata",
-                SecurityStamp = "duner",
-                ConcurrencyStamp = "pizza",
-                PhoneNumber = "ddz",
-                PhoneNumberConfirmed = true,
-                TwoFactorEnabled = false,
-                LockoutEnd = null,
-                LockoutEnabled = false,
-                AccessFailedCount = 69
-            };
+            User user = AddTestUser(userId, userName);
 
             userServiceMock.Setup(x => x.GetByName(userName))
                            .Returns(user);
 
-            context.Users.Add(user);
-            context.SaveChanges();
-
             const int id = 1;
 
-            Book book = new Book(id, "title", "preview", "link",
-                                 "genre", "author", 10, 2000);
-
-            context.Books.Add(book);
-            context.SaveChanges();
+            AddTestBook(id);
 
             likeService.Like(id, userName);
             likeService.Like(id, userName);
@@ -344,40 +220,14 @@ namespace Tests
             string userId = "1";
             string userName = "2";
 
-            User user = new User()
-            {
-                Id = userId,
-                UserName = userName,
-                Gender = "idk",
-                BirthDate = DateTime.Now,
-                NormalizedUserName = "NAME",
-                Email = "dedede",
-                NormalizedEmail = "EMAIL",
-                EmailConfirmed = false,
-                PasswordHash = "pishmiqjkata",
-                SecurityStamp = "duner",
-                ConcurrencyStamp = "pizza",
-                PhoneNumber = "ddz",
-                PhoneNumberConfirmed = true,
-                TwoFactorEnabled = false,
-                LockoutEnd = null,
-                LockoutEnabled = false,
-                AccessFailedCount = 69
-            };
+            User user = AddTestUser(userId, userName);
 
             userServiceMock.Setup(x => x.GetByName(userName))
                            .Returns(user);
 
-            context.Users.Add(user);
-            context.SaveChanges();
-
             const int id = 1;
 
-            Book book = new Book(id, "title", "preview", "link",
-                                 "genre", "author", 10, 2000);
-
-            context.Books.Add(book);
-            context.SaveChanges();
+            AddTestBook(id);
 
             likeService.Like(id, userName);
             likeService.Like(id, userName);
@@ -397,6 +247,35 @@ namespace Tests
             string userId = "1";
             string userName = "2";
 
+            User user = AddTestUser(userId, userName);
+
+            userServiceMock.Setup(x => x.GetByName(userName))
+                           .Returns(user);
+
+            const int id = 1;
+
+            AddTestBook(id);
+
+            likeService.Like(id, userName);
+            likeService.Like(id, userName);
+            likeService.Like(id, userName);
+
+            Assert.True(likeService.GetLikesCount(id) == 3);
+        }
+
+        public Book AddTestBook(int id)
+        {
+            Book book = new Book(id, "title", "preview", "link",
+                                 "genre", "author", 10, 2000);
+
+            context.Books.Add(book);
+            context.SaveChanges();
+
+            return book;
+        }
+
+        public User AddTestUser(string userId, string userName)
+        {
             User user = new User()
             {
                 Id = userId,
@@ -418,25 +297,10 @@ namespace Tests
                 AccessFailedCount = 69
             };
 
-            userServiceMock.Setup(x => x.GetByName(userName))
-                           .Returns(user);
-
             context.Users.Add(user);
             context.SaveChanges();
 
-            const int id = 1;
-
-            Book book = new Book(id, "title", "preview", "link",
-                                 "genre", "author", 10, 2000);
-
-            context.Books.Add(book);
-            context.SaveChanges();
-
-            likeService.Like(id, userName);
-            likeService.Like(id, userName);
-            likeService.Like(id, userName);
-
-            Assert.True(likeService.GetLikesCount(id) == 3);
+            return user;
         }
     }
 }

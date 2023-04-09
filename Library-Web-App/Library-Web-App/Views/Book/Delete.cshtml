@@ -1,52 +1,45 @@
 ﻿@using Library_Web_App.Data.Entities
 @model Book
 
-@if (User.IsInRole("admin")) {
-	@if (Model != null)
-	{
-		<h3>@Model.Title</h3>
+@if (Model != null)
+{
+	<h3>@Model.Title</h3>
 
-		<p>
-			<span><b>Author:</b></span>
-			<label>@Model.Author</label>
-		</p>
+	<p>
+		<span><b>Author:</b></span>
+		<label>@Model.Author</label>
+	</p>
 
-		<p>
-			<span><b>Genre:</b></span>
-			<label>@Model.Genre</label>
-		</p>
+	<p>
+		<span><b>Genre:</b></span>
+		<label>@Model.Genre</label>
+	</p>
 
-		<p>
-			<span><b>Year of publication:</b></span>
-			<label>@Model.YearOfPublication</label>
-		</p>
+	<p>
+		<span><b>Year of publication:</b></span>
+		<label>@Model.YearOfPublication</label>
+	</p>
 
-		<p>
-			<span><b>Pages:</b></span>
-			<label>@Model.Pages</label>
-		</p>
+	<p>
+		<span><b>Pages:</b></span>
+		<label>@Model.Pages</label>
+	</p>
 
-		<p>
-			<span><b>Link:</b></span>
-			<a href="@Model.Link" target="_blank"> Here</a>
-		</p>
+	<p>
+		<span><b>Link:</b></span>
+		<a href="@Model.Link" target="_blank"> Here</a>
+	</p>
 
-		<span><b>Preview:</b></span>
-		<p>
-			<textarea cols="125" rows="7" disabled style="resize: none;"> @Model.Preview </textarea>
-		</p>
+	<span><b>Preview:</b></span>
+	<p>
+		<textarea cols="125" rows="7" disabled style="resize: none;"> @Model.Preview </textarea>
+	</p>
 
-		<button><a asp-controller="Book" asp-action="Index">Deny</a></button>
-		<button><a asp-controller="Book" asp-action="DeleteConfirmed" asp-route-id="@Model.Id">Delete</a></button>
-	}else
-	{
-		<div style="margin: auto; text-align: center; font-weight: bold;">
-			<p style="padding: 5px;">Book Not Found!</p>
-		</div>
-	}
-}else {
+	<button><a asp-controller="Book" asp-action="Index">Deny</a></button>
+	<button><a asp-controller="Book" asp-action="DeleteConfirmed" asp-route-id="@Model.Id">Delete</a></button>
+}else
+{
 	<div style="margin: auto; text-align: center; font-weight: bold;">
-		<img style="border-radius: 10px;" src="https://media.tenor.com/BlKbcuoS9RMAAAAC/bitch-wheres-my-money.gif" alt="Description of image">
-		<p style="padding: 5px;">You should have given me money to make you an Admin!</p>
+		<p style="padding: 5px;">Book Not Found!</p>
 	</div>
 }
